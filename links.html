@@ -177,12 +177,16 @@
     // Where the visitor came from (links.html?src=share, ?src=x, ?src=flier)
     // becomes the App Store campaign token, so App Analytics > Campaigns can
     // count installs per channel. Unknown or missing sources stay "link_hub".
+    // Some channels also get their own App Store custom product page (ppid);
+    // until Apple approves one, the link falls back to the default page.
+    var PRODUCT_PAGES = { x: '3ccb785d-2dcd-48bd-9415-0fdae849f597' };
     (function () {
       var src = (new URLSearchParams(location.search).get('src') || '').toLowerCase();
       if (!/^[a-z0-9_]{1,40}$/.test(src)) return;
       var ios = document.getElementById('ios-link');
       var android = document.getElementById('android-link');
-      if (ios) ios.href = 'https://apps.apple.com/app/apple-store/id6761584109?pt=128727967&ct=' + src + '&mt=8';
+      var ppid = Object.prototype.hasOwnProperty.call(PRODUCT_PAGES, src) ? '&ppid=' + PRODUCT_PAGES[src] : '';
+      if (ios) ios.href = 'https://apps.apple.com/app/apple-store/id6761584109?pt=128727967&ct=' + src + '&mt=8' + ppid;
       if (android) android.href = 'https://play.google.com/store/apps/details?id=com.playoftheday.app&referrer=utm_source%3D' + src;
     })();
   </script>
